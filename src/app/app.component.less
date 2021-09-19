@@ -1,0 +1,135 @@
+@color-bg: #191c40;
+@color-blue-light: #1392eb;
+@color-blue-dark: #026cb3;
+@color-blue-sc: #37a2da;
+@color-blue-green: #10BDC5;
+@color-split-line: grey;
+@padding-small: 0 5px;
+
+// Global
+.wrapper {
+  height: 100%;
+  width: 100%;
+  background: @color-bg;
+  overflow-y: hidden;
+}
+
+.title {
+  height: 3rem;
+  line-height: 3rem;
+  border-bottom: 1px solid @color-split-line;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.left,
+.right,
+.middle {
+  border: 1px solid @color-split-line;
+  height: 100%;
+  color: @color-blue-light;
+}
+
+// Left
+.left .slide {
+  padding: 4rem;
+}
+
+.left .slide .slide-title {
+  text-align: center;
+  color: @color-blue-dark;
+}
+
+.slide,
+.person,
+.cards {
+  padding: @padding-small
+}
+
+.sub-title {
+  color: @color-blue-green;
+  border-bottom: 1px solid @color-split-line;
+  margin-right: 1rem;
+}
+
+.person .person-content {
+  padding: 2rem;
+}
+
+.person .user,
+.person .date {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.input-content, .input-title {
+  padding-right: 1rem;
+}
+
+
+.cards .selective-content {
+  height: 100%;
+  padding: 2rem 0 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;;
+}
+
+
+.cards .selective-item {
+  width: 85%;
+  height: 7rem;
+  border: 1px solid @color-split-line;
+  border-radius: 4px;
+  margin: .75rem 0;
+}
+
+// Middle
+.middle .content {
+  padding: 4rem 2rem;
+}
+
+.auto-content {
+  padding: 4rem 1rem;
+}
+
+.auto-content-result {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+// right
+.right .content {
+  padding: 4rem 2rem;
+}
+
+.right .table {
+  margin: 5rem 0;
+  border: .5px solid @color-split-line;
+}
+
+.table .ant-col {
+  border: .5px solid @color-split-line;
+  padding: 7px;
+  color: @color-blue-green;
+}
+
+.table .tb-cell {
+  color: @color-blue-sc;
+}
+
+
+::ng-deep .ant-input-number-input,
+::ng-deep .ant-input {
+  background: @color-bg;
+  border-color: @color-split-line;
+}
+::ng-deep .ant-slider-rail {
+  background: @color-split-line;
+}
+::ng-deep .ant-slider-dot {
+  background: @color-split-line;
+}

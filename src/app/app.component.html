@@ -1,0 +1,142 @@
+<div class="wrapper">
+  <div nz-row [ngStyle]="{height: '100%'}">
+    <div nz-col nzSpan="10" class="left">
+      <div class="title">
+        数据加载
+      </div>
+
+      <div class="left-content">
+        <div nz-row class="slide">
+          <div nz-col nzSpan="10">loading</div>
+          <div nz-col nzSpan="14">
+            <div class="slide-title">时间滑块:
+              <nz-input-number
+                [nzMin]="18"
+                [nzMax]="180"
+                [ngStyle]="{color:'red', 'border-color': 'grey'}"
+                [nzFormatter]="formatterSecond"
+                [nzParser]="parserSecond"
+                [(ngModel)]="timeValue"
+              ></nz-input-number>
+            </div>
+            <div class="slide-content">
+              <nz-slider [nzMin]="18" [nzMax]="180"
+                         [(ngModel)]="timeValue"></nz-slider>
+            </div>
+          </div>
+        </div>
+        <div nz-row class="person">
+          <div nz-col nzSpan="10">
+            <div class="sub-title">个人信息</div>
+            <div class="person-content">
+              <div class="user">
+                <span class="input-title">用户</span>
+                <span class="input-content">
+                  <input nz-input [(ngModel)]="user" name="user" readonly>
+                </span>
+              </div>
+              <div class="date">
+                <span class="input-title">日期</span>
+                <span class="input-content">
+                  <input nz-input readonly [(ngModel)]="formatDate" name="formatDate" [ngStyle]="{color:'red'}">
+                </span>
+              </div>
+            </div>
+          </div>
+          <div nz-col nzSpan="14">
+            <div class="sub-title">预处理信号</div>
+            <div class="pre-sig-content">pre-signal loading</div>
+          </div>
+        </div>
+        <div nz-row  class="cards">
+          <div nz-col nzSpan="10">
+            <div class="sub-title">选项卡</div>
+            <div class="selective-content">
+              <div class="selective-item"></div>
+              <div class="selective-item"></div>
+              <div class="selective-item"></div>
+            </div>
+          </div>
+          <div nz-col nzSpan="14">
+            <div class="sub-title">原始信号</div>
+            <div class="origin-sig-content">origin-signal loading</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div nz-col nzSpan="5" class="middle">
+      <div class="title">
+        诊断
+      </div>
+      <div class="content">
+        <div nz-row class="auto-analyse-result">
+          <div nz-col nzSpan="24">
+            <div class="sub-title">自动诊断结果</div>
+            <div class="auto-content">
+              <div class="auto-content-result">
+                <span class="input-title">分析结果</span>
+                <span class="input-content">
+                  <input nz-input />
+                </span>
+              </div>
+              <div class="auto-content-dashboard">
+                <div echarts [options]="dsOption"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div nz-row class="analyse">
+          <div nz-col nzSpan="24">
+            <div class="sub-title">分析</div>
+            <div class="analyse-button">
+              analyse button
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div nz-col nzSpan="9" class="right">
+      <div class="title">
+        结果分析
+      </div>
+      <div class="content">
+        <div nz-row class="data-result">
+          <div nz-col nzSpan="24">
+            <div class="sub-title">特征显著性分析</div>
+            <div class="chart" echarts [options]="scOption"></div>
+            <div class="table">
+              <div nz-row>
+                <div nz-col nzSpan="4"></div>
+                <div nz-col nzSpan="5" class="tb-title">文件名</div>
+                <div nz-col nzSpan="5" class="tb-title">识别结果</div>
+                <div nz-col nzSpan="5" class="tb-title">置信度</div>
+                <div nz-col nzSpan="5" class="tb-title">手动标注</div>
+              </div>
+              <div nz-row>
+                <div nz-col nzSpan="4" class="tb-title">心电</div>
+                <div nz-col nzSpan="5" class="tb-cell">111</div>
+                <div nz-col nzSpan="5" class="tb-cell">222</div>
+                <div nz-col nzSpan="5" class="tb-cell">333</div>
+                <div nz-col nzSpan="5" class="tb-cell">444</div>
+              </div>
+              <div nz-row>
+                <div nz-col nzSpan="4" class="tb-title">脑电</div>
+                <div nz-col nzSpan="5" class="tb-cell">111</div>
+                <div nz-col nzSpan="5" class="tb-cell">222</div>
+                <div nz-col nzSpan="5" class="tb-cell">333</div>
+                <div nz-col nzSpan="5" class="tb-cell">444</div>
+              </div>
+              <div nz-row>
+                <div nz-col nzSpan="4" class="tb-title">皮电</div>
+                <div nz-col nzSpan="5" class="tb-cell">111</div>
+                <div nz-col nzSpan="5" class="tb-cell">222</div>
+                <div nz-col nzSpan="5" class="tb-cell">333</div>
+                <div nz-col nzSpan="5" class="tb-cell">444</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
