@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {marks} from "./antd.config";
 import {format} from "date-fns";
 import {dashboardOption, scatterOption} from "./echarts.config";
+import {NzUploadChangeParam} from "ng-zorro-antd/upload";
 
 
 @Component({
@@ -77,4 +78,12 @@ export class AppComponent implements OnInit {
 
   }
 
+  handleChange(info: NzUploadChangeParam) {
+    if (info.file.status !== 'uploading') {
+      const file = info.file.originFileObj;
+      console.log(file)
+
+    }
+
+  }
 }

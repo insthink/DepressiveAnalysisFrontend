@@ -8,7 +8,11 @@
       <div class="left-content">
         <div nz-row class="slide">
           <div nz-col nzSpan="10" class="loading-img">
-            <img src="../assets/loading.png" width="60%"/>
+            <nz-upload
+              [nzHeaders]="{ authorization: 'authorization-text' }"
+              (nzChange)="handleChange($event)">
+              <img src="../assets/loading.png" width="60%"/>
+            </nz-upload>
           </div>
           <div nz-col nzSpan="14">
             <div class="slide-title">时间滑块:

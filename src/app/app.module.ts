@@ -14,6 +14,7 @@ import {NzSliderModule} from "ng-zorro-antd/slider";
 import {NzInputNumberModule} from "ng-zorro-antd/input-number";
 import {NzInputModule} from "ng-zorro-antd/input";
 import {NgxEchartsModule} from "ngx-echarts";
+import {NzUploadModule} from "ng-zorro-antd/upload";
 
 registerLocaleData(zh);
 
@@ -21,7 +22,8 @@ const antd = [
   NzGridModule,
   NzSliderModule,
   NzInputNumberModule,
-  NzInputModule
+  NzInputModule,
+  NzUploadModule,
 ];
 
 @NgModule({
