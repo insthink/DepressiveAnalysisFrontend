@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   scOption: any;
 
   // input-params
-  timeValue = 18;
+  timeValue = 0;
   user = '';
   formatDate = format(new Date(), "yyyy-MM-dd HH:mm:ss");
   dashboardData = [];

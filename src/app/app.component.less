@@ -31,6 +31,10 @@
 }
 
 // Left
+.left .loading-img:hover {
+  cursor: pointer;
+}
+
 .left .slide {
   padding: 4rem;
 }
@@ -68,7 +72,6 @@
   padding-right: 1rem;
 }
 
-
 .cards .selective-content {
   height: 100%;
   padding: 2rem 0 2rem 1.5rem;
@@ -83,6 +86,15 @@
   border: 1px solid @color-split-line;
   border-radius: 4px;
   margin: .75rem 0;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cards .selective-item:hover {
+  cursor: pointer;
+  background: #0c1040;
 }
 
 // Middle
@@ -101,35 +113,62 @@
   padding: 1rem;
 }
 
+.analyse-button {
+  padding: 1rem;
+  text-align: center;
+}
+
+.analyse-button:hover {
+  cursor: pointer;
+}
+
 // right
 .right .content {
   padding: 4rem 2rem;
 }
 
 .right .table {
-  margin: 5rem 0;
+  margin: 4rem 0;
   border: .5px solid @color-split-line;
 }
 
-.table .ant-col {
+
+
+.table table {
+  width: 100%
+}
+
+.table .cell {
+  background: #124b56;
+}
+
+.table td {
   border: .5px solid @color-split-line;
   padding: 7px;
   color: @color-blue-green;
+  text-align: center;
 }
 
-.table .tb-cell {
-  color: @color-blue-sc;
+.table th {
+  border: .5px solid @color-split-line;
+  padding: 7px;
+  color: #c3c6da;
 }
 
+.table .cell-th {
+  background: #125456;
+}
 
 ::ng-deep .ant-input-number-input,
 ::ng-deep .ant-input {
   background: @color-bg;
   border-color: @color-split-line;
 }
+
 ::ng-deep .ant-slider-rail {
   background: @color-split-line;
 }
+
 ::ng-deep .ant-slider-dot {
   background: @color-split-line;
 }
