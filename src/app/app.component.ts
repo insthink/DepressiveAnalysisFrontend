@@ -17,6 +17,7 @@ export class AppComponent implements OnInit {
 
   // constant
   FREQ = 200; // 采样频率
+  INTR = 20;
 
   // antd-params
   marks = marks;
@@ -79,7 +80,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     // test
     const dsData = {
-      value: 70,
+      value: 0,
       name: '置信度'
     };
     // @ts-ignore
@@ -231,8 +232,15 @@ export class AppComponent implements OnInit {
   }
 
   analyseState() {
-    this.conf = this.analysisData[this.currentUserId.toString()]["conf"];
-    this.state = this.analysisData[this.currentUserId.toString()]["state"];
+    const isHealth = this.analysisData[this.currentUserId.toString()]["conf"];
+    if (isHealth == 1) {
+      this.state = '抑郁';
+    } else {
+      this.state = '健康';
+    }
+    this.conf = this.analysisData[this.currentUserId.toString()]["state"];
+    const data = [{value: this.conf, name: '置信度'}];
+    this.dsOption = dashboardOption(data as any);
   }
 
   // prepare for table
@@ -258,12 +266,15 @@ export class AppComponent implements OnInit {
 
   // prepare for processed chart
   _getProcData(category: string) {
-    return this.procData[category].slice(this.timeValue * this.FREQ);
+    return this.procData[category].slice(this.timeValue * this.FREQ,
+      this.timeValue * this.FREQ + this.INTR * this.FREQ
+      );
   }
 
   // prepare for origin chart
   _getOriginData(category: string) {
-    return JSON.parse(this.personDataStr)[category].slice(this.timeValue * this.FREQ);
+    return JSON.parse(this.personDataStr)[category].slice(this.timeValue * this.FREQ,
+      this.timeValue * this.FREQ + this.INTR * this.FREQ);
   }
 
   _getCurrentId() {
@@ -271,7 +282,8 @@ export class AppComponent implements OnInit {
   }
 
   _getSerialX() {
-    return JSON.parse(this.personDataStr)["x"].slice(this.timeValue * this.FREQ);
+    return JSON.parse(this.personDataStr)["x"].slice(this.timeValue * this.FREQ,
+      this.timeValue * this.FREQ + this.INTR * this.FREQ);
   }
 
 }

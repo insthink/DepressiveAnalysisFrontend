@@ -97,7 +97,9 @@
               <div class="auto-content-result">
                 <span class="input-title">分析结果</span>
                 <span class="input-content">
-                  <input nz-input [(ngModel)]="state" name="state" readonly/>
+                  <input nz-input [(ngModel)]="state" name="state"
+                         style="text-align: center"
+                         [ngStyle]="state=='抑郁'?{color: 'red'}:{color:'green'}" readonly/>
                 </span>
               </div>
               <div class="auto-content-dashboard">

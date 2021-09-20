@@ -31,8 +31,9 @@ export const dashboardOption = (data: []) => {
         color: 'auto',
       },
       detail: {
-        formatter: '{value}',
-        color: 'auto'
+        formatter: '{value}%',
+        color: 'auto',
+        fontSize: 24,
       },
       title: {
         offsetCenter: [0, '-20%'],
@@ -54,25 +55,27 @@ export const scatterOption = (dataL: any[],
                               labelY2: string,
                               needLine?: boolean,
                               type = 'scatter') => {
+  dataL.sort((a, b) => a[0] - b[0]);
+  const endIndex = dataL.length - 1;
   let markLineOpt = {};
   if (needLine) {
     markLineOpt = {
       animation: false,
       label: {
-        formatter: 'y = x',
         align: 'right'
       },
       lineStyle: {
-        type: 'solid'
+        type: 'solid',
+        color: 'blue'
       },
       tooltip: {
         formatter: 'y = x'
       },
       data: [[{
-        coord: [900, 900],
+        coord: [dataL[0][0],dataL[0][0]],
         symbol: 'none'
       }, {
-        coord: [2000, 2000],
+        coord: [dataL[endIndex][endIndex]],
         symbol: 'none'
       }]]
     };
@@ -199,9 +202,9 @@ export const scatterOption = (dataL: any[],
         itemStyle: {
           color: 'red',
         },
-        symbolSize: 3,
+        symbolSize: 5,
         data: dataL,
-        markLine: markLineOpt,
+        markLine: markLineOpt
       },
       {
         type: type,
@@ -210,7 +213,7 @@ export const scatterOption = (dataL: any[],
         },
         xAxisIndex: 1,
         yAxisIndex: 1,
-        symbolSize: 3,
+        symbolSize: 5,
         data: dataR,
       },
     ]
