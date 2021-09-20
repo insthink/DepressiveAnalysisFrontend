@@ -44,22 +44,48 @@ export const dashboardOption = (data: []) => {
   } as EChartsOption
 };
 
-export const scatterOption = (data1: any[],
-                              data2: any[],
+export const scatterOption = (dataL: any[],
+                              dataR: any[],
                               showX: boolean,
                               showY: boolean,
                               labelX1: string,
                               labelX2: string,
                               labelY1: string,
-                              labelY2: string) => {
+                              labelY2: string,
+                              needLine?: boolean,
+                              type = 'scatter') => {
+  let markLineOpt = {};
+  if (needLine) {
+    markLineOpt = {
+      animation: false,
+      label: {
+        formatter: 'y = x',
+        align: 'right'
+      },
+      lineStyle: {
+        type: 'solid'
+      },
+      tooltip: {
+        formatter: 'y = x'
+      },
+      data: [[{
+        coord: [900, 900],
+        symbol: 'none'
+      }, {
+        coord: [2000, 2000],
+        symbol: 'none'
+      }]]
+    };
+  }
+
   return {
     title: {
       left: 'center',
       top: 0
     },
     grid: [
-      {left: '5%', top: '10%', width: '42%', height: '60%'},
-      {right: '5%', top: '10%', width: '42%', height: '60%'},
+      {left: '7%', top: '10%', width: '40%', height: '60%'},
+      {right: '7%', top: '10%', width: '40%', height: '60%'},
     ],
     xAxis: [
       {
@@ -67,41 +93,50 @@ export const scatterOption = (data1: any[],
         name: labelX1,
         nameLocation: 'middle',
         nameTextStyle: {
-          fontSize: 14,
           color: light_blue,
+          padding: 7
         },
         splitLine: {
           show: false
         },
+        axisTick: {
+          show: showX,
+        },
         axisLabel: {
           color: light_blue,
+          show: showX,
         },
         axisLine: {
           lineStyle: {
             color: light_blue,
-          }
+          },
         },
-
+        scale: true,
       },
       {
         gridIndex: 1,
         name: labelX2,
         nameLocation: 'middle',
         nameTextStyle: {
-          fontSize: 14,
           color: light_blue,
+          padding: 7
         },
         splitLine: {
           show: false
         },
+        axisTick: {
+          show: showX,
+        },
         axisLabel: {
           color: light_blue,
+          show: showX,
         },
         axisLine: {
           lineStyle: {
             color: light_blue,
           }
-        }
+        },
+        scale: true,
       },
     ],
     yAxis: [
@@ -110,63 +145,73 @@ export const scatterOption = (data1: any[],
         name: labelY1,
         nameLocation: 'middle',
         nameTextStyle: {
-          fontSize: 14,
+          padding: 15,
           color: light_blue,
         },
         splitLine: {
           show: false
         },
+        axisTick: {
+          show: showY,
+        },
         axisLabel: {
           color: light_blue,
+          show: showY,
         },
         axisLine: {
           lineStyle: {
             color: light_blue,
           }
-        }
+        },
+        scale: true,
       },
       {
         gridIndex: 1,
         name: labelY2,
         nameLocation: 'middle',
         nameTextStyle: {
-          fontSize: 14,
+          padding: 15,
           color: light_blue,
         },
         splitLine: {
           show: false
         },
+        axisTick: {
+          show: showY,
+        },
         axisLabel: {
           color: light_blue,
+          show: showY,
         },
         axisLine: {
           lineStyle: {
             color: light_blue,
           }
-        }
+        },
+        scale: true,
       },
     ],
     series: [
       {
-        type: 'scatter',
+        type: type,
         xAxisIndex: 0,
         yAxisIndex: 0,
         itemStyle: {
           color: 'red',
-
         },
-        symbolSize: 5,
-        data: data1,
+        symbolSize: 3,
+        data: dataL,
+        markLine: markLineOpt,
       },
       {
-        type: 'scatter',
+        type: type,
         itemStyle: {
           color: 'red'
         },
         xAxisIndex: 1,
         yAxisIndex: 1,
-        symbolSize: 5,
-        data: data2,
+        symbolSize: 3,
+        data: dataR,
       },
     ]
   }
@@ -183,14 +228,14 @@ export const lineCombineOption = (dataX: any[],
       {left: '7%', bottom: '0%', width: '80%', height: '20%'},
     ],
     xAxis: [
-      {gridIndex: 0, data: dataX, show:false},
-      {gridIndex: 1, data: dataX, show:false},
-      {gridIndex: 2, data: dataX, show:false},
+      {gridIndex: 0, data: dataX, show: false},
+      {gridIndex: 1, data: dataX, show: false},
+      {gridIndex: 2, data: dataX, show: false},
     ],
     yAxis: [
-      {gridIndex: 0, show:false},
-      {gridIndex: 1, show:false},
-      {gridIndex: 2, show:false},
+      {gridIndex: 0, show: false},
+      {gridIndex: 1, show: false},
+      {gridIndex: 2, show: false},
     ],
     series: [
       {
@@ -236,10 +281,10 @@ export const lineOption = (dataX: [], dataY: []) => {
       }
     },
     xAxis: [
-      {data: dataX, show:false},
+      {data: dataX, show: false},
     ],
     yAxis: [
-      {show:false},
+      {show: false},
     ],
     series: [
       {

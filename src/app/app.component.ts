@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {marks} from "./config/antd.config";
 import {format} from "date-fns";
-import {dashboardOption, lineCombineOption, scatterOption} from "./config/echarts.config";
+import {dashboardOption, lineCombineOption, lineOption, scatterOption} from "./config/echarts.config";
 import {NzUploadChangeParam, NzUploadFile} from "ng-zorro-antd/upload";
 import {JsonService} from "./service/json.service";
+import {zip} from "./util/trans.util";
 
 
 @Component({
@@ -51,15 +52,23 @@ export class AppComponent implements OnInit {
 
   // pre-handle signal
   procData: any;
+  currentTag = -1;
 
   // scatter data
   scatterData: any;
 
   // table
   tableData: any;
+  tableHeart = [];
+  tableBrain = [];
+  tableSkin = [];
 
   // analysis
   analysisData: any;
+  isHealth = false;
+  conf = 0;
+  state = '';
+
 
 
   constructor(private jsonService: JsonService) {
@@ -76,10 +85,16 @@ export class AppComponent implements OnInit {
     // @ts-ignore
     this.dashboardData.push(dsData);
     this.dsOption = dashboardOption(this.dashboardData as any);
-    this.scOption = scatterOption([], [],
-      true, true,
-      'RR(t)', '时间（秒）',
-      'RR(t-1)', '心率（拍/分）');
+    this.scOption = scatterOption(
+      [],
+      [],
+      true,
+      true,
+      "RR(t)",
+      "时间(秒)",
+      "RR(t-1)",
+      "心率（拍/分）"
+    );
   }
 
   handleChange(info: NzUploadChangeParam) {
@@ -97,9 +112,9 @@ export class AppComponent implements OnInit {
           this.personDataStr = e.target.result;
           this.xData = this._getSerialX();
           this.currentUserId = this._getCurrentId();
-          this.heartOriData = this._getOriginHeart();
-          this.brainOriData = this._getOriginBrain();
-          this.skinOriData = this._getOriginSkin();
+          this.heartOriData = this._getOriginData("ECG");
+          this.brainOriData = this._getOriginData("EEG");
+          this.skinOriData = this._getOriginData("GSR");
 
           this.lineOption = lineCombineOption(this.xData,
             this.heartOriData,
@@ -109,50 +124,146 @@ export class AppComponent implements OnInit {
           // load processed
           this.jsonService.loadPreprocessed(this.currentUserId).subscribe(data => {
             this.procData = data;
-            console.log(data);
           });
 
           // load scatter
           this.jsonService.loadScatter().subscribe(data => {
             this.scatterData = data;
-            console.log(data);
           });
 
           // load table
           this.jsonService.loadTable().subscribe(data => {
             this.tableData = data;
-            console.log(data);
           });
 
           // load analysis
           this.jsonService.loadAnalysis().subscribe(data => {
             this.analysisData = data;
-            console.log(data);
           })
         }
       })(file);
     }
   }
 
-  slideChange($event: any) {
+  slideChange() {
     if (this.personDataStr) {
       this.lineOption = lineCombineOption(this._getSerialX(),
-        this._getOriginHeart(),
-        this._getOriginBrain(),
-        this._getOriginSkin());
+        this._getOriginData("ECG"),
+        this._getOriginData("EEG"),
+        this._getOriginData("GSR"));
+    }
+    switch (this.currentTag) {
+      case 1:
+        this.singleLineOption = lineOption(this._getSerialX(), this._getProcData("ECG"));
+        break;
+      case 2:
+        this.singleLineOption = lineOption(this._getSerialX(), this._getProcData("EEG"));
+        break;
+      case 3:
+        this.singleLineOption = lineOption(this._getSerialX(), this._getProcData("GSR"));
+        break;
+      default:
     }
   }
 
-  _getOriginHeart() {
-    return JSON.parse(this.personDataStr)["ECG"].slice(this.timeValue * this.FREQ);
+  handleSelect(tag: number) {
+    this.currentTag = tag;
+    switch (tag) {
+      case 1:
+        // heart
+        // 1.processed
+        this.singleLineOption = lineOption(this._getSerialX(), this._getProcData("ECG"));
+        // 2.scatter
+        const heartSc = this._getTransData("ECG");
+        this.scOption = scatterOption(
+          heartSc.left,
+          heartSc.right,
+          true,
+          true,
+          "RR(t)",
+          "时间(秒)",
+          "RR(t-1)",
+          "心率（拍/分）",
+          true
+        );
+        // 3.table
+        this.tableHeart = this._getTableRowData("ECG");
+        break;
+      case 2:
+        // brain
+        this.singleLineOption = lineOption(this._getSerialX(), this._getProcData("EEG"));
+        const brainSc = this._getTransData("EEG");
+        this.scOption = scatterOption(
+          brainSc.left,
+          brainSc.right,
+          false,
+          false,
+          "复杂度",
+          "模糊熵",
+          "",
+          "",
+          false,
+          "line",
+        );
+        this.tableBrain = this._getTableRowData("EEG");
+        break;
+      case 3:
+        // skin
+        this.singleLineOption = lineOption(this._getSerialX(), this._getProcData("GSR"));
+        const skinSc = this._getTransData("GSR");
+        this.scOption = scatterOption(
+          skinSc.left,
+          skinSc.right,
+          false,
+          false,
+          "样本熵",
+          "模糊熵",
+          "",
+          "",
+          false,
+          "line",
+        );
+        this.tableSkin = this._getTableRowData("GSR");
+        break;
+      default:
+
+    }
   }
 
-  _getOriginBrain() {
-    return JSON.parse(this.personDataStr)["EEG"].slice(this.timeValue * this.FREQ);
+  analyseState() {
+    this.conf = this.analysisData[this.currentUserId.toString()]["conf"];
+    this.state = this.analysisData[this.currentUserId.toString()]["state"];
   }
 
-  _getOriginSkin() {
-    return JSON.parse(this.personDataStr)["GSR"].slice(this.timeValue * this.FREQ);
+  // prepare for table
+  _getTableRowData(category: string) {
+    return this.tableData[this.currentUserId.toString()][category];
+  }
+
+  // prepare for scatter chart
+  _getTransData(category: string) {
+    const leftTag = `${category}_left`;
+    const rightTag = `${category}_right`;
+    const leftData = this.scatterData[this.currentUserId.toString()][leftTag];
+    const rightData = this.scatterData[this.currentUserId.toString()][rightTag];
+    console.log(leftData);
+    console.log(rightData);
+    const leftDataTrans = zip(leftData.x, leftData.y);
+    const rightDataTrans = zip(rightData.x, rightData.y);
+    return {
+      left: leftDataTrans,
+      right: rightDataTrans
+    };
+  }
+
+  // prepare for processed chart
+  _getProcData(category: string) {
+    return this.procData[category].slice(this.timeValue * this.FREQ);
+  }
+
+  // prepare for origin chart
+  _getOriginData(category: string) {
+    return JSON.parse(this.personDataStr)[category].slice(this.timeValue * this.FREQ);
   }
 
   _getCurrentId() {

@@ -29,7 +29,7 @@
             <div class="slide-content">
               <nz-slider [nzMin]="0" [nzMax]="160"
                          [(ngModel)]="timeValue"
-                         (ngModelChange)="slideChange($event)"></nz-slider>
+                         (ngModelChange)="slideChange()"></nz-slider>
             </div>
           </div>
         </div>
@@ -62,15 +62,15 @@
           <div nz-col nzSpan="10">
             <div class="sub-title">选项卡</div>
             <div class="selective-content">
-              <div class="selective-item">
+              <div class="selective-item" (click)="handleSelect(1)">
                 <img src="../assets/img/heart.png" width="68%">
                 <span>心电</span>
               </div>
-              <div class="selective-item">
+              <div class="selective-item" (click)="handleSelect(2)">
                 <img src="../assets/img/brain.png" width="68%">
                 <span>脑电</span>
               </div>
-              <div class="selective-item">
+              <div class="selective-item" (click)="handleSelect(3)">
                 <img src="../assets/img/hand.png" width="68%">
                 <span>皮电</span>
               </div>
@@ -97,7 +97,7 @@
               <div class="auto-content-result">
                 <span class="input-title">分析结果</span>
                 <span class="input-content">
-                  <input nz-input/>
+                  <input nz-input [(ngModel)]="state" name="state" readonly/>
                 </span>
               </div>
               <div class="auto-content-dashboard">
@@ -109,7 +109,7 @@
         <div nz-row class="analyse">
           <div nz-col nzSpan="24">
             <div class="sub-title">分析</div>
-            <div class="analyse-button">
+            <div class="analyse-button" (click)="analyseState()">
               <img src="../assets/img/status.png" width="60%"/>
             </div>
           </div>
@@ -127,7 +127,7 @@
             <div class="chart" echarts [options]="scOption"></div>
             <div class="table">
               <table>
-                <tr>
+                <tr *ngIf="tableHeart.length > 0">
                   <th [rowSpan]="2" class="cell">心电</th>
                   <th class="cell-th">SDNN</th>
                   <th class="cell-th">RMSSD</th>
@@ -136,13 +136,11 @@
                   <th class="cell-th">样本熵</th>
                 </tr>
                 <tr>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
+                  <td *ngFor="let item of tableHeart">
+                    {{item | number:"0.2-2"}}
+                  </td>
                 </tr>
-                <tr>
+                <tr *ngIf="tableBrain.length > 0">
                   <th [rowSpan]="2" class="cell">脑电</th>
                   <th class="cell-th">复杂度</th>
                   <th class="cell-th">近似熵</th>
@@ -151,13 +149,11 @@
                   <th class="cell-th">差分熵</th>
                 </tr>
                 <tr>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
+                  <td *ngFor="let item of tableBrain">
+                    {{item | number:"0.2-2"}}
+                  </td>
                 </tr>
-                <tr>
+                <tr *ngIf="tableSkin.length > 0">
                   <th [rowSpan]="2" class="cell">皮电</th>
                   <th class="cell-th">均值</th>
                   <th class="cell-th">标准差</th>
@@ -166,11 +162,9 @@
                   <th class="cell-th">皮电水平</th>
                 </tr>
                 <tr>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
+                  <td *ngFor="let item of tableSkin">
+                    {{item | number:"0.2-2"}}
+                  </td>
                 </tr>
               </table>
             </div>
