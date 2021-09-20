@@ -164,10 +164,10 @@ export const scatterOption = (data1: any[], data2: any[]) => {
   }
 };
 
-export const lineOption = (dataX: any[],
-                           dataY1: any[],
-                           dataY2: any[],
-                           dataY3: any[]) => {
+export const lineCombineOption = (dataX: any[],
+                                  dataY1: any[],
+                                  dataY2: any[],
+                                  dataY3: any[]) => {
   return {
     grid: [
       {left: '7%', top: '14%', width: '80%', height: '20%'},
@@ -209,6 +209,41 @@ export const lineOption = (dataX: any[],
         yAxisIndex: 2,
         symbol: null,
         data: dataY3,
+      },
+    ]
+  }
+};
+
+export const lineOption = (dataX: [], dataY: []) => {
+  return {
+    grid: [
+      {left: '7%', top: '10%', width: '80%', height: '30%'},
+    ],
+    toolbox: {
+      feature: {
+        dataZoom: {},
+        brush: {
+          type: ['rect']
+        }
+      }
+    },
+    xAxis: [
+      {data: dataX, show:false},
+    ],
+    yAxis: [
+      {show:false},
+    ],
+    series: [
+      {
+        name: 'I',
+        type: 'line',
+        xAxisIndex: 0,
+        yAxisIndex: 0,
+        symbol: null,
+        data: dataY,
+        itemStyle: {
+          color: '#2FAC83'
+        }
       },
     ]
   }

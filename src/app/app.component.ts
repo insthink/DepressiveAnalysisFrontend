@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {marks} from "./config/antd.config";
 import {format} from "date-fns";
-import {dashboardOption, lineOption, scatterOption} from "./config/echarts.config";
-import {NzUploadChangeParam} from "ng-zorro-antd/upload";
+import {dashboardOption, lineCombineOption, lineOption, scatterOption} from "./config/echarts.config";
+import {NzUploadChangeParam, NzUploadFile} from "ng-zorro-antd/upload";
 
 
 @Component({
@@ -13,6 +13,8 @@ import {NzUploadChangeParam} from "ng-zorro-antd/upload";
 export class AppComponent implements OnInit {
   title = 'DepressionAnalysis';
 
+  // constant
+  FREQ = 200; // 采样频率
 
   // antd-params
   marks = marks;
@@ -23,10 +25,13 @@ export class AppComponent implements OnInit {
   dsOption: any;
   scOption: any;
   lineOption: any;
+  singleLineOption: any;
 
   // input-params
   personDataStr = '';
+  preSignalStr = '';
   timeValue = 0;
+  uploadFileList: NzUploadFile[] = [];
 
   user = '';
   formatDate = format(new Date(), "yyyy-MM-dd HH:mm:ss");
@@ -36,11 +41,16 @@ export class AppComponent implements OnInit {
   scData1 = [];
   scData2 = [];
 
+  // origin data
   currentUserId = -1;
   xData = [];
   heartOriData = [];
   brainOriData = [];
   skinOriData = [];
+
+  // pre-handle signal
+  currentTag = -1;
+  preHandleData = [];
 
 
   constructor() {
@@ -93,6 +103,10 @@ export class AppComponent implements OnInit {
   handleChange(info: NzUploadChangeParam) {
     if (info.file.status !== 'uploading') {
       const file = info.file.originFileObj;
+      this.uploadFileList = [];
+      // save name
+      this.user = file ? file.name.split('.')[0] : '';
+      // save origin signal
       const reader = new FileReader();
       reader.readAsText(file as any);
       reader.onload = (f => {
@@ -104,7 +118,7 @@ export class AppComponent implements OnInit {
           this.brainOriData = this._getOriginBrain();
           this.skinOriData = this._getOriginSkin();
 
-          this.lineOption = lineOption(this.xData,
+          this.lineOption = lineCombineOption(this.xData,
             this.heartOriData,
             this.brainOriData,
             this.skinOriData);
@@ -113,23 +127,59 @@ export class AppComponent implements OnInit {
     }
   }
 
+  handlePreSigChange(info: NzUploadChangeParam, tag: number) {
+    if (info.file.status !== 'uploading') {
+      const file = info.file.originFileObj;
+      this.uploadFileList = [];
+      // save origin signal
+      const reader = new FileReader();
+      reader.readAsText(file as any);
+      reader.onload = (f => {
+        return (e: any) => {
+          this.preSignalStr = e.target.result;
+          this.currentTag = tag;
+          this.singleLineOption = lineOption(this._getSerialX2(), this._getPreSignal(tag));
+        }
+      })(file);
+    }
+  }
+
   slideChange($event: any) {
-    this.lineOption = lineOption(this._getSerialX(),
-      this._getOriginHeart(),
-      this._getOriginBrain(),
-      this._getOriginSkin());
+    if (this.personDataStr) {
+      this.lineOption = lineCombineOption(this._getSerialX(),
+        this._getOriginHeart(),
+        this._getOriginBrain(),
+        this._getOriginSkin());
+    }
+    if (this.preSignalStr) {
+      this.singleLineOption = lineOption(this._getSerialX2(),
+        this._getPreSignal(this.currentTag));
+    }
+  }
+
+  _getPreSignal(tag: number) {
+    switch (tag) {
+      case 1:
+        return JSON.parse(this.preSignalStr)["ECG"].slice(this.timeValue * this.FREQ);
+      case 2:
+        return JSON.parse(this.preSignalStr)["EEG"].slice(this.timeValue * this.FREQ);
+      case 3:
+        return JSON.parse(this.preSignalStr)["GSR"].slice(this.timeValue * this.FREQ);
+      default:
+        return [];
+    }
   }
 
   _getOriginHeart() {
-    return JSON.parse(this.personDataStr)["ECG"].slice(this.timeValue * 200);
+    return JSON.parse(this.personDataStr)["ECG"].slice(this.timeValue * this.FREQ);
   }
 
   _getOriginBrain() {
-    return JSON.parse(this.personDataStr)["EEG"].slice(this.timeValue * 200);
+    return JSON.parse(this.personDataStr)["EEG"].slice(this.timeValue * this.FREQ);
   }
 
   _getOriginSkin() {
-    return JSON.parse(this.personDataStr)["GSR"].slice(this.timeValue * 200);
+    return JSON.parse(this.personDataStr)["GSR"].slice(this.timeValue * this.FREQ);
   }
 
   _getCurrentId() {
@@ -137,8 +187,11 @@ export class AppComponent implements OnInit {
   }
 
   _getSerialX() {
-    return JSON.parse(this.personDataStr)["x"].slice(this.timeValue * 200);
+    return JSON.parse(this.personDataStr)["x"].slice(this.timeValue * this.FREQ);
   }
 
+  _getSerialX2() {
+    return JSON.parse(this.preSignalStr)["x"].slice(this.timeValue * this.FREQ);
+  }
 
 }

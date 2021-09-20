@@ -10,6 +10,7 @@
           <div nz-col nzSpan="10" class="loading-img">
             <nz-upload
               [nzHeaders]="{ authorization: 'authorization-text' }"
+              [(nzFileList)]="uploadFileList"
               (nzChange)="handleChange($event)">
               <img src="../assets/loading.png" width="60%"/>
             </nz-upload>
@@ -39,7 +40,7 @@
               <div class="user">
                 <span class="input-title">用户</span>
                 <span class="input-content">
-                  <input nz-input [(ngModel)]="user" name="user" readonly>
+                  <input nz-input [(ngModel)]="user" [ngStyle]="{color:'red'}" name="user" readonly>
                 </span>
               </div>
               <div class="date">
@@ -52,7 +53,9 @@
           </div>
           <div nz-col nzSpan="14">
             <div class="sub-title">预处理信号</div>
-            <div class="pre-sig-content">pre-signal loading</div>
+            <div class="pre-sig-content" style="height: 200px;">
+              <div echarts [options]="singleLineOption"></div>
+            </div>
           </div>
         </div>
         <div nz-row class="cards">
@@ -60,13 +63,28 @@
             <div class="sub-title">选项卡</div>
             <div class="selective-content">
               <div class="selective-item">
-                <img src="../assets/heart.png" width="68%">
+                <nz-upload
+                  [nzHeaders]="{ authorization: 'authorization-text' }"
+                  [(nzFileList)]="uploadFileList"
+                  (nzChange)="handlePreSigChange($event, 1)">
+                  <img src="../assets/heart.png" width="68%">
+                </nz-upload>
               </div>
               <div class="selective-item">
-                <img src="../assets/brain.png" width="68%">
+                <nz-upload
+                  [nzHeaders]="{ authorization: 'authorization-text' }"
+                  [(nzFileList)]="uploadFileList"
+                  (nzChange)="handlePreSigChange($event, 2)">
+                  <img src="../assets/brain.png" width="68%">
+                </nz-upload>
               </div>
               <div class="selective-item">
-                <img src="../assets/hand.png" width="68%">
+                <nz-upload
+                  [nzHeaders]="{ authorization: 'authorization-text' }"
+                  [(nzFileList)]="uploadFileList"
+                  (nzChange)="handlePreSigChange($event, 3)">
+                  <img src="../assets/hand.png" width="68%">
+                </nz-upload>
               </div>
             </div>
           </div>
