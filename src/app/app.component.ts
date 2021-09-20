@@ -72,6 +72,7 @@ export class AppComponent implements OnInit {
 
 
 
+
   constructor(private jsonService: JsonService) {
     this.dsOption = dashboardOption(this.dashboardData as any);
   }
@@ -100,6 +101,9 @@ export class AppComponent implements OnInit {
   }
 
   handleChange(info: NzUploadChangeParam) {
+    // 数据清除
+    this._reset();
+
     if (info.file.status !== 'uploading') {
       const file = info.file.originFileObj;
       this.uploadFileList = [];
@@ -269,7 +273,7 @@ export class AppComponent implements OnInit {
   _getProcData(category: string) {
     return this.procData[category].slice(this.timeValue * this.FREQ,
       this.timeValue * this.FREQ + this.INTR * this.FREQ
-      );
+    );
   }
 
   // prepare for origin chart
@@ -287,4 +291,35 @@ export class AppComponent implements OnInit {
       this.timeValue * this.FREQ + this.INTR * this.FREQ);
   }
 
+  _reset() {
+    this.analysisData = null;
+    this.conf = 0;
+    this.state = '';
+    this.tableData = null;
+    this.tableHeart = ['','','','',''];
+    this.tableBrain = ['','','','',''];
+    this.tableSkin = ['','','','',''];
+    this.scatterData = null;
+    this.procData = null;
+    this.currentTag = -1;
+    this.dashboardData = [];
+    const dsData = {
+      value: 0,
+      name: '置信度'
+    };
+    // @ts-ignore
+    this.dashboardData.push(dsData);
+    this.dsOption = dashboardOption(this.dashboardData as any);
+    this.scOption = scatterOption(
+      [],
+      [],
+      true,
+      true,
+      "RR(t)",
+      "时间(秒)",
+      "RR(t-1)",
+      "心率（拍/分）",
+      true
+    );
+  }
 }
