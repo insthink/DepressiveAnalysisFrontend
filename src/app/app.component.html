@@ -27,7 +27,8 @@
             </div>
             <div class="slide-content">
               <nz-slider [nzMin]="0" [nzMax]="160"
-                         [(ngModel)]="timeValue"></nz-slider>
+                         [(ngModel)]="timeValue"
+                         (ngModelChange)="slideChange($event)"></nz-slider>
             </div>
           </div>
         </div>
@@ -71,7 +72,9 @@
           </div>
           <div nz-col nzSpan="14">
             <div class="sub-title">原始信号</div>
-            <div class="origin-sig-content">origin-signal loading</div>
+            <div class="origin-sig-content">
+              <div echarts [options]="lineOption"></div>
+            </div>
           </div>
         </div>
       </div>

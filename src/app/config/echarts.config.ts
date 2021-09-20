@@ -69,7 +69,7 @@ export const scatterOption = (data1: any[], data2: any[]) => {
         axisLabel: {
           color: light_blue,
         },
-        axisLine:{
+        axisLine: {
           lineStyle: {
             color: light_blue,
           }
@@ -89,7 +89,7 @@ export const scatterOption = (data1: any[], data2: any[]) => {
         axisLabel: {
           color: light_blue,
         },
-        axisLine:{
+        axisLine: {
           lineStyle: {
             color: light_blue,
           }
@@ -111,7 +111,7 @@ export const scatterOption = (data1: any[], data2: any[]) => {
         axisLabel: {
           color: light_blue,
         },
-        axisLine:{
+        axisLine: {
           lineStyle: {
             color: light_blue,
           }
@@ -131,7 +131,7 @@ export const scatterOption = (data1: any[], data2: any[]) => {
         axisLabel: {
           color: light_blue,
         },
-        axisLine:{
+        axisLine: {
           lineStyle: {
             color: light_blue,
           }
@@ -143,7 +143,7 @@ export const scatterOption = (data1: any[], data2: any[]) => {
         type: 'scatter',
         xAxisIndex: 0,
         yAxisIndex: 0,
-        itemStyle:  {
+        itemStyle: {
           color: 'red',
 
         },
@@ -152,13 +152,63 @@ export const scatterOption = (data1: any[], data2: any[]) => {
       },
       {
         type: 'scatter',
-        itemStyle:  {
+        itemStyle: {
           color: 'red'
         },
         xAxisIndex: 1,
         yAxisIndex: 1,
         symbolSize: 5,
         data: data2,
+      },
+    ]
+  }
+};
+
+export const lineOption = (dataX: any[],
+                           dataY1: any[],
+                           dataY2: any[],
+                           dataY3: any[]) => {
+  return {
+    grid: [
+      {left: '7%', top: '14%', width: '80%', height: '20%'},
+      {left: '7%', top: '47%', width: '80%', height: '20%'},
+      {left: '7%', bottom: '0%', width: '80%', height: '20%'},
+    ],
+    xAxis: [
+      {gridIndex: 0, data: dataX, show:false},
+      {gridIndex: 1, data: dataX, show:false},
+      {gridIndex: 2, data: dataX, show:false},
+    ],
+    yAxis: [
+      {gridIndex: 0, show:false},
+      {gridIndex: 1, show:false},
+      {gridIndex: 2, show:false},
+    ],
+    series: [
+      {
+        name: 'I',
+
+        type: 'line',
+        xAxisIndex: 0,
+        yAxisIndex: 0,
+        symbol: null,
+        data: dataY1
+      },
+      {
+        name: 'II',
+        type: 'line',
+        xAxisIndex: 1,
+        yAxisIndex: 1,
+        symbol: null,
+        data: dataY2,
+      },
+      {
+        name: 'III',
+        type: 'line',
+        xAxisIndex: 2,
+        yAxisIndex: 2,
+        symbol: null,
+        data: dataY3,
       },
     ]
   }

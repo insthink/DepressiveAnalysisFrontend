@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {marks} from "./antd.config";
+import {marks} from "./config/antd.config";
 import {format} from "date-fns";
-import {dashboardOption, scatterOption} from "./echarts.config";
+import {dashboardOption, lineOption, scatterOption} from "./config/echarts.config";
 import {NzUploadChangeParam} from "ng-zorro-antd/upload";
 
 
@@ -22,14 +22,26 @@ export class AppComponent implements OnInit {
   // echart-params
   dsOption: any;
   scOption: any;
+  lineOption: any;
 
   // input-params
+  personDataStr = '';
   timeValue = 0;
+
   user = '';
   formatDate = format(new Date(), "yyyy-MM-dd HH:mm:ss");
+
   dashboardData = [];
+
   scData1 = [];
   scData2 = [];
+
+  currentUserId = -1;
+  xData = [];
+  heartOriData = [];
+  brainOriData = [];
+  skinOriData = [];
+
 
   constructor() {
     this.dsOption = dashboardOption(this.dashboardData as any);
@@ -81,9 +93,52 @@ export class AppComponent implements OnInit {
   handleChange(info: NzUploadChangeParam) {
     if (info.file.status !== 'uploading') {
       const file = info.file.originFileObj;
-      console.log(file)
+      const reader = new FileReader();
+      reader.readAsText(file as any);
+      reader.onload = (f => {
+        return (e: any) => {
+          this.personDataStr = e.target.result;
+          this.xData = this._getSerialX();
+          this.currentUserId = this._getCurrentId();
+          this.heartOriData = this._getOriginHeart();
+          this.brainOriData = this._getOriginBrain();
+          this.skinOriData = this._getOriginSkin();
 
+          this.lineOption = lineOption(this.xData,
+            this.heartOriData,
+            this.brainOriData,
+            this.skinOriData);
+        }
+      })(file);
     }
-
   }
+
+  slideChange($event: any) {
+    this.lineOption = lineOption(this._getSerialX(),
+      this._getOriginHeart(),
+      this._getOriginBrain(),
+      this._getOriginSkin());
+  }
+
+  _getOriginHeart() {
+    return JSON.parse(this.personDataStr)["ECG"].slice(this.timeValue * 200);
+  }
+
+  _getOriginBrain() {
+    return JSON.parse(this.personDataStr)["EEG"].slice(this.timeValue * 200);
+  }
+
+  _getOriginSkin() {
+    return JSON.parse(this.personDataStr)["GSR"].slice(this.timeValue * 200);
+  }
+
+  _getCurrentId() {
+    return JSON.parse(this.personDataStr)["index"];
+  }
+
+  _getSerialX() {
+    return JSON.parse(this.personDataStr)["x"].slice(this.timeValue * 200);
+  }
+
+
 }
