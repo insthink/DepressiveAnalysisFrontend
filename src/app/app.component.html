@@ -129,7 +129,7 @@
             <div class="chart" echarts [options]="scOption"></div>
             <div class="table">
               <table>
-                <tr *ngIf="tableHeart.length > 0">
+                <tr>
                   <th [rowSpan]="2" class="cell">心电</th>
                   <th class="cell-th">SDNN</th>
                   <th class="cell-th">RMSSD</th>
@@ -139,10 +139,10 @@
                 </tr>
                 <tr>
                   <td *ngFor="let item of tableHeart">
-                    {{item | number:"0.2-2"}}
+                    {{item ? (item | number:"0.2-2"):'-'}}
                   </td>
                 </tr>
-                <tr *ngIf="tableBrain.length > 0">
+                <tr>
                   <th [rowSpan]="2" class="cell">脑电</th>
                   <th class="cell-th">复杂度</th>
                   <th class="cell-th">近似熵</th>
@@ -152,10 +152,10 @@
                 </tr>
                 <tr>
                   <td *ngFor="let item of tableBrain">
-                    {{item | number:"0.2-2"}}
+                    {{item ? (item | number:"0.2-2"):'-'}}
                   </td>
                 </tr>
-                <tr *ngIf="tableSkin.length > 0">
+                <tr>
                   <th [rowSpan]="2" class="cell">皮电</th>
                   <th class="cell-th">均值</th>
                   <th class="cell-th">标准差</th>
@@ -165,7 +165,7 @@
                 </tr>
                 <tr>
                   <td *ngFor="let item of tableSkin">
-                    {{item | number:"0.2-2"}}
+                    {{item ? (item | number:"0.2-2"):'-'}}
                   </td>
                 </tr>
               </table>

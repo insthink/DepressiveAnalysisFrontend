@@ -60,9 +60,9 @@ export class AppComponent implements OnInit {
 
   // table
   tableData: any;
-  tableHeart = [];
-  tableBrain = [];
-  tableSkin = [];
+  tableHeart = ['','','','',''];
+  tableBrain = ['','','','',''];
+  tableSkin = ['','','','',''];
 
   // analysis
   analysisData: any;
