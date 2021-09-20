@@ -58,7 +58,9 @@ export const scatterOption = (dataL: any[],
   dataL.sort((a, b) => a[0] - b[0]);
   const endIndex = dataL.length - 1;
   let markLineOpt = {};
-  if (needLine) {
+  if (needLine && dataL.length > 0) {
+    console.log(dataL[0]);
+    console.log(dataL[endIndex]);
     markLineOpt = {
       animation: false,
       label: {
@@ -75,7 +77,7 @@ export const scatterOption = (dataL: any[],
         coord: [dataL[0][0],dataL[0][0]],
         symbol: 'none'
       }, {
-        coord: [dataL[endIndex][endIndex]],
+        coord: [dataL[endIndex][0], dataL[endIndex][0]],
         symbol: 'none'
       }]]
     };

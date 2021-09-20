@@ -94,7 +94,8 @@ export class AppComponent implements OnInit {
       "RR(t)",
       "时间(秒)",
       "RR(t-1)",
-      "心率（拍/分）"
+      "心率（拍/分）",
+      true
     );
   }
 
