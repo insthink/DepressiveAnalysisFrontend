@@ -44,7 +44,14 @@ export const dashboardOption = (data: []) => {
   } as EChartsOption
 };
 
-export const scatterOption = (data1: any[], data2: any[]) => {
+export const scatterOption = (data1: any[],
+                              data2: any[],
+                              showX: boolean,
+                              showY: boolean,
+                              labelX1: string,
+                              labelX2: string,
+                              labelY1: string,
+                              labelY2: string) => {
   return {
     title: {
       left: 'center',
@@ -57,7 +64,7 @@ export const scatterOption = (data1: any[], data2: any[]) => {
     xAxis: [
       {
         gridIndex: 0,
-        name: 'RR(t)',
+        name: labelX1,
         nameLocation: 'middle',
         nameTextStyle: {
           fontSize: 14,
@@ -73,11 +80,12 @@ export const scatterOption = (data1: any[], data2: any[]) => {
           lineStyle: {
             color: light_blue,
           }
-        }
+        },
+
       },
       {
         gridIndex: 1,
-        name: '时间(秒)',
+        name: labelX2,
         nameLocation: 'middle',
         nameTextStyle: {
           fontSize: 14,
@@ -99,7 +107,7 @@ export const scatterOption = (data1: any[], data2: any[]) => {
     yAxis: [
       {
         gridIndex: 0,
-        name: 'RR(t-1)',
+        name: labelY1,
         nameLocation: 'middle',
         nameTextStyle: {
           fontSize: 14,
@@ -119,7 +127,7 @@ export const scatterOption = (data1: any[], data2: any[]) => {
       },
       {
         gridIndex: 1,
-        name: '心率(拍/分)',
+        name: labelY2,
         nameLocation: 'middle',
         nameTextStyle: {
           fontSize: 14,

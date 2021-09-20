@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {marks} from "./config/antd.config";
 import {format} from "date-fns";
-import {dashboardOption, lineCombineOption, lineOption, scatterOption} from "./config/echarts.config";
+import {dashboardOption, lineCombineOption, scatterOption} from "./config/echarts.config";
 import {NzUploadChangeParam, NzUploadFile} from "ng-zorro-antd/upload";
+import {JsonService} from "./service/json.service";
 
 
 @Component({
@@ -49,13 +50,20 @@ export class AppComponent implements OnInit {
   skinOriData = [];
 
   // pre-handle signal
-  currentTag = -1;
-  preHandleData = [];
+  procData: any;
+
+  // scatter data
+  scatterData: any;
+
+  // table
+  tableData: any;
+
+  // analysis
+  analysisData: any;
 
 
-  constructor() {
+  constructor(private jsonService: JsonService) {
     this.dsOption = dashboardOption(this.dashboardData as any);
-    this.scOption = scatterOption(this.scData1, this.scData2);
   }
 
 
@@ -68,36 +76,10 @@ export class AppComponent implements OnInit {
     // @ts-ignore
     this.dashboardData.push(dsData);
     this.dsOption = dashboardOption(this.dashboardData as any);
-
-    const scData1 = [
-      [10.0, 8.04],
-      [8.0, 6.95],
-      [13.0, 7.58],
-      [9.0, 8.81],
-      [11.0, 8.33],
-      [14.0, 9.96],
-      [6.0, 7.24],
-      [4.0, 4.26],
-      [12.0, 10.84],
-      [7.0, 4.82],
-      [5.0, 5.68]
-    ];
-
-    const scData2 = [
-      [10.0, 9.14],
-      [8.0, 8.14],
-      [13.0, 8.74],
-      [9.0, 8.77],
-      [11.0, 9.26],
-      [14.0, 8.10],
-      [6.0, 6.13],
-      [4.0, 3.10],
-      [12.0, 9.13],
-      [7.0, 7.26],
-      [5.0, 4.74]
-    ];
-    this.scOption = scatterOption(scData1, scData2);
-
+    this.scOption = scatterOption([], [],
+      true, true,
+      'RR(t)', '时间（秒）',
+      'RR(t-1)', '心率（拍/分）');
   }
 
   handleChange(info: NzUploadChangeParam) {
@@ -111,6 +93,7 @@ export class AppComponent implements OnInit {
       reader.readAsText(file as any);
       reader.onload = (f => {
         return (e: any) => {
+          // load origin
           this.personDataStr = e.target.result;
           this.xData = this._getSerialX();
           this.currentUserId = this._getCurrentId();
@@ -122,23 +105,30 @@ export class AppComponent implements OnInit {
             this.heartOriData,
             this.brainOriData,
             this.skinOriData);
-        }
-      })(file);
-    }
-  }
 
-  handlePreSigChange(info: NzUploadChangeParam, tag: number) {
-    if (info.file.status !== 'uploading') {
-      const file = info.file.originFileObj;
-      this.uploadFileList = [];
-      // save origin signal
-      const reader = new FileReader();
-      reader.readAsText(file as any);
-      reader.onload = (f => {
-        return (e: any) => {
-          this.preSignalStr = e.target.result;
-          this.currentTag = tag;
-          this.singleLineOption = lineOption(this._getSerialX2(), this._getPreSignal(tag));
+          // load processed
+          this.jsonService.loadPreprocessed(this.currentUserId).subscribe(data => {
+            this.procData = data;
+            console.log(data);
+          });
+
+          // load scatter
+          this.jsonService.loadScatter().subscribe(data => {
+            this.scatterData = data;
+            console.log(data);
+          });
+
+          // load table
+          this.jsonService.loadTable().subscribe(data => {
+            this.tableData = data;
+            console.log(data);
+          });
+
+          // load analysis
+          this.jsonService.loadAnalysis().subscribe(data => {
+            this.analysisData = data;
+            console.log(data);
+          })
         }
       })(file);
     }
@@ -150,23 +140,6 @@ export class AppComponent implements OnInit {
         this._getOriginHeart(),
         this._getOriginBrain(),
         this._getOriginSkin());
-    }
-    if (this.preSignalStr) {
-      this.singleLineOption = lineOption(this._getSerialX2(),
-        this._getPreSignal(this.currentTag));
-    }
-  }
-
-  _getPreSignal(tag: number) {
-    switch (tag) {
-      case 1:
-        return JSON.parse(this.preSignalStr)["ECG"].slice(this.timeValue * this.FREQ);
-      case 2:
-        return JSON.parse(this.preSignalStr)["EEG"].slice(this.timeValue * this.FREQ);
-      case 3:
-        return JSON.parse(this.preSignalStr)["GSR"].slice(this.timeValue * this.FREQ);
-      default:
-        return [];
     }
   }
 
@@ -188,10 +161,6 @@ export class AppComponent implements OnInit {
 
   _getSerialX() {
     return JSON.parse(this.personDataStr)["x"].slice(this.timeValue * this.FREQ);
-  }
-
-  _getSerialX2() {
-    return JSON.parse(this.preSignalStr)["x"].slice(this.timeValue * this.FREQ);
   }
 
 }
