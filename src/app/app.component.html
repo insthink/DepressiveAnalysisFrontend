@@ -12,7 +12,7 @@
               [nzHeaders]="{ authorization: 'authorization-text' }"
               [(nzFileList)]="uploadFileList"
               (nzChange)="handleChange($event)">
-              <img src="../assets/img/loading.png" width="60%"/>
+              <img src="/assets/img/loading.png" width="60%"/>
             </nz-upload>
           </div>
           <div nz-col nzSpan="14">
@@ -63,15 +63,15 @@
             <div class="sub-title">选项卡</div>
             <div class="selective-content">
               <div class="selective-item" (click)="handleSelect(1)">
-                <img src="../assets/img/heart.png" width="68%">
+                <img src="/assets/img/heart.png" width="68%">
                 <span>心电</span>
               </div>
               <div class="selective-item" (click)="handleSelect(2)">
-                <img src="../assets/img/brain.png" width="68%">
+                <img src="/assets/img/brain.png" width="68%">
                 <span>脑电</span>
               </div>
               <div class="selective-item" (click)="handleSelect(3)">
-                <img src="../assets/img/hand.png" width="68%">
+                <img src="/assets/img/hand.png" width="68%">
                 <span>皮电</span>
               </div>
             </div>
@@ -112,7 +112,7 @@
           <div nz-col nzSpan="24">
             <div class="sub-title">分析</div>
             <div class="analyse-button" (click)="analyseState()">
-              <img src="../assets/img/status.png" width="60%"/>
+              <img src="/assets/img/status.png" width="60%"/>
             </div>
           </div>
         </div>
